@@ -32,7 +32,7 @@ func Test_Diagram(t *testing.T) {
 		},
 	}
 
-	z, err := GetZByX(dia, Point{X: 1, Y: 2.5})
+	z, err := GetZByXAndY(dia, Point{X: 1, Y: 2.5})
 	if err != nil {
 		t.Fatal(err)
 	}

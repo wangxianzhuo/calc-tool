@@ -13,8 +13,8 @@ type Diagram struct {
 	Optimal Point    `json:"optimal"`
 }
 
-// GetZByX get z value by x value
-func GetZByX(dia Diagram, point Point) (z float64, err error) {
+// GetZByXAndY get z value by x & y value
+func GetZByXAndY(dia Diagram, point Point) (z float64, err error) {
 	isStop := false
 
 	var y, x float64
@@ -123,5 +123,5 @@ func GetZViaStream(r io.Reader, optimal, wantedPoint Point) (z float64, err erro
 		Optimal: optimal,
 	}
 
-	return GetZByX(dia, wantedPoint)
+	return GetZByXAndY(dia, wantedPoint)
 }
