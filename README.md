@@ -10,6 +10,7 @@
 - modbus-rtu instruction check
 - modbus-rtu instruction parse
 - modbus-rtu instruction generate with check code
+- modbus-rtu response check
 
 ### Hydropower
 
