@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"math"
 )
 
 // TCPResponseParseReadHoldingRegister pares modbus tcp read holding register response,
@@ -13,16 +14,16 @@ import (
 func TCPResponseParseReadHoldingRegister(resp []byte, log io.Writer) (float64, error) {
 	var size int16
 	if len(resp) > 6 {
-		size := binary.BigEndian.Uint16(resp[4:6])
+		size = int16(binary.BigEndian.Uint16(resp[4:6]))
 		if len(resp) != (6 + int(size)) {
-			return 0, fmt.Errorf("modbus-tcp response %X is illegal", resp)
+			return 0, fmt.Errorf("modbus-tcp response %X is illegal, pdu size is %d", resp, size)
 		}
 	} else {
 		return 0, fmt.Errorf("the response %X is not modbus-tcp response", resp)
 	}
 
 	protocl := resp[2:4]
-	pdu := resp[6:int(size)]
+	pdu := resp[6 : 6+int(size)]
 
 	if bytes.Compare(protocl, []byte{0, 0}) != 0 {
 		return 0, fmt.Errorf("do not support protocol %X for modbus", protocl)
@@ -71,9 +72,9 @@ func parsePDU(pdu []byte) (slaveAddr, funCode, size int, data float64, err error
 	case 2:
 		data = float64(binary.BigEndian.Uint16(pdu[3 : 3+size]))
 	case 4:
-		data = float64(binary.BigEndian.Uint32(pdu[3 : 3+size]))
+		data = float64(math.Float32frombits(binary.BigEndian.Uint32(pdu[3 : 3+size])))
 	case 8:
-		data = float64(binary.BigEndian.Uint64(pdu[3 : 3+size]))
+		data = float64(math.Float64frombits(binary.BigEndian.Uint64(pdu[3 : 3+size])))
 	default:
 		return 0, 0, 0, 0, fmt.Errorf("can't support more than 8 bytes value convert")
 	}
